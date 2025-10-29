@@ -15,6 +15,13 @@
 
 ## Installation
 
+建议使用 miniconda 创建虚拟环境：
+
+```bash
+conda create -n quant python=3.10
+conda activate quant
+```
+
 ```bash
 pip install -r requirements.txt
 ```
