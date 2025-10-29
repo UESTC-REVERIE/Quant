@@ -9,6 +9,10 @@
 - [ ] 使用 Streamlit 可视化
 - [ ] 使用 Temporal Fusion Transformer 模型作为 Baseline，可以直接使用 [Pytorch Forecast](https://github.com/sktime/pytorch-forecasting?tab=readme-ov-file) 库中的实现
 
+## Study
+
+[OKX Docs](https://www.okx.com/docs-v5/zh/#overview)
+
 ## Installation
 
 ```bash
@@ -20,13 +24,14 @@ pip install -r requirements.txt
 下载数据：
 
 ```bash
-
+python okx/okx_fetch_data.py --inst-id BTC-USDT-SWAP --bar 15m  --start "2025-10-27" --end "2025-10-28" --outfile data/btc_swap_15m_20251027_20251028.csv
 ```
 
 数据分析：
+TODO: 改成读取 CSV 文件分析并可视化（写成 jupyter 的 .ipynb 文件）。
 
 ```bash
-python okx_data_diagnosis.py --inst-id BTC-USDT --start 2018-01-01 --bar 1H
+# python okx/okx_data_diagnosis.py --inst-id BTC-USDT --start 2018-01-01 --bar 1H
 ```
 
 ## Usage

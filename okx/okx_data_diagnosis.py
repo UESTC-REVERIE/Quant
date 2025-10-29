@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+### TODO: 改成验证下载下来的 CSV 文件。
+
 """
 okx_data_diagnosis.py
 验证使用 OKX 公共行情 API 的数据获取是否可行，并判断是否满足训练最小样本量。
@@ -7,12 +10,6 @@ okx_data_diagnosis.py
 运行示例：
   python okx_data_diagnosis.py --inst-id BTC-USDT --start 2018-01-01 --bar 1D \
       --seq-len 60 --max-h 15 --min-train-windows 100
-
-可选代理：
-  python okx_data_diagnosis.py --proxy http://127.0.0.1:7897
-
-依赖：
-  pip install requests certifi pandas numpy
 """
 
 import sys
@@ -47,8 +44,6 @@ def fetch_okx_candles(
     inst_id: str,
     start_date: str,
     bar: str = "1D",
-    proxy_url: Optional[str] = None,  # SDK 不直接提供代理参数；多数场景下系统代理即可生效
-    timeout: int = 20,                # SDK内部有默认超时，这里参数保留占位
     per_page: int = 100,
     max_loops: int = 5000,
     show_progress: bool = True,
@@ -240,11 +235,9 @@ def main():
     parser.add_argument("--inst-id", type=str, default="BTC-USDT", help="交易对，比如 BTC-USDT / ETH-USDT")
     parser.add_argument("--start", type=str, default="2018-01-01", help="起始日期 (YYYY-MM-DD)")
     parser.add_argument("--bar", type=str, default="1D", help="K线周期，例如 1D / 4H / 1H / 1m ...")
-    parser.add_argument("--proxy", type=str, default=None, help="HTTP(S) 代理，如 http://127.0.0.1:7897")
     parser.add_argument("--seq-len", type=int, default=60, help="输入窗口长度")
     parser.add_argument("--max-h", type=int, default=15, help="预测步数")
     parser.add_argument("--min-train-windows", type=int, default=100, help="训练至少需要的样本窗口数")
-    parser.add_argument("--timeout", type=int, default=20, help="HTTP 超时秒")
     parser.add_argument("--max-loops", type=int, default=2000, help="向前翻页最大次数（保障能翻到较早历史）")
     args = parser.parse_args()
 
@@ -322,10 +315,10 @@ def main():
         print(f"{k}: {v}")
 
     if trainable:
-        print("\n✅ 结论：数据完整、合理且数量充足，可以进入训练阶段。")
+        print("\n结论：数据完整、合理且数量充足，可以进入训练阶段。")
         sys.exit(0)
     else:
-        print("\n⚠️ 结论：当前样本不足以训练。")
+        print("\n结论：当前样本不足以训练。")
         print("建议：")
         print("  1) 减少 --seq-len 或 --max-h；")
         print("  2) 调低 --min-train-windows；")
